@@ -1,5 +1,5 @@
 /* Offline cache. Bump CACHE when index.html changes so the phone picks it up. */
-const CACHE = 'wl-v2';
+const CACHE = 'wl-v3';
 const ASSETS = [
   './',
   './index.html',
