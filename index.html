@@ -334,7 +334,6 @@ const GROCERIES = [
     ['Broccoli', '2 crowns'],
     ['Green beans', '1 steam bag'],
     ['Caesar salad kit', ''],
-    ['Avocados', '2'],
     ['Yellow onion', ''],
     ['Bell pepper', ''],
     ['Limes', '2'],
@@ -412,7 +411,7 @@ const RECIPES = [
       '1 packet taco seasoning',
       '1 can black beans, drained &amp; rinsed',
       '2 microwave rice pouches',
-      'Cheese, salsa, avocado, Greek yogurt, lime'
+      'Cheese, salsa, Greek yogurt, lime'
     ],
     steps: [
       { t: 'Medium-high, splash of oil. Onion and pepper, 4 min.', timers: [['Veg 4m', 240]] },
@@ -420,12 +419,12 @@ const RECIPES = [
       { t: 'Taco seasoning + 1/3 cup water. Simmer 3 min until it thickens.', timers: [['Simmer 3m', 180]] },
       { t: 'Stir in black beans, heat through 2 min. Squeeze in half a lime.', timers: [['Beans 2m', 120]] },
       { t: 'Microwave both rice pouches.' },
-      { t: 'Three containers: rice base, turkey on top. Keep avocado and yogurt <em>out</em>.' }
+      { t: 'Three containers: rice base, turkey on top. Keep the yogurt <em>out</em>.' }
     ],
     extra: {
       label: 'Add when you eat',
       items: [
-        '1 oz cheese · 2 tbsp salsa · 1/4 avocado',
+        '1 oz cheese · 2 tbsp salsa',
         '2 tbsp Greek yogurt — your sour cream, same texture, 3g protein instead of 0',
         'Squeeze of lime'
       ]
@@ -566,7 +565,8 @@ document.querySelectorAll('nav button').forEach(b => {
 function renderGrocery() {
   let got = 0, all = 0;
   const html = GROCERIES.map(([sec, items]) => {
-    const marked = items.map((it, i) => ({ txt: it[0], qty: it[1], k: sec + '::' + i }));
+    /* keyed by name, not index — editing the list must not shift what's checked */
+    const marked = items.map(it => ({ txt: it[0], qty: it[1], k: sec + '::' + it[0] }));
     const on = marked.filter(m => DB.grocery[m.k]);
     const off = marked.filter(m => !DB.grocery[m.k]);
     got += on.length; all += marked.length;
