@@ -108,11 +108,13 @@ nav button:active{background:var(--surface)}
 .btn.ghost{background:none;color:var(--dim);font-weight:500;font-size:14px;min-height:48px}
 .btn.ghost:active{background:var(--surface-2)}
 
-input[type=text],input[type=number],input[type=date]{
+input[type=text],input[type=number],input[type=date],input[type=password],textarea{
   width:100%;min-height:52px;padding:12px 14px;
   background:var(--bg);border:1px solid var(--line-2);border-radius:11px;
   font-size:16px;font-variant-numeric:tabular-nums;
 }
+textarea{min-height:88px;resize:vertical;line-height:1.45;font-family:inherit}
+textarea:focus{outline:none;border-color:var(--accent)}
 input::placeholder{color:var(--dim-2)}
 input:focus{outline:none;border-color:var(--accent)}
 input[type=number]{-moz-appearance:textfield}
@@ -243,6 +245,20 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 
 .manual{display:grid;grid-template-columns:1fr;gap:9px}
 .manual .pair{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+
+/* ---------- AI estimate ---------- */
+.ai{display:grid;gap:9px}
+.airow{display:flex;align-items:center;gap:12px;padding:11px 14px;border-top:1px solid var(--line);min-height:52px}
+.airow:first-child{border-top:0}
+.airow .an{flex:1;font-size:15px}
+.airow .am{font-size:13px;color:var(--dim);font-variant-numeric:tabular-nums;white-space:nowrap}
+.aitot{display:flex;justify-content:space-between;align-items:baseline;padding:12px 14px;border-top:1px solid var(--line-2);background:var(--surface-2)}
+.aitot .k{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim-2)}
+.aitot .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.ainote{padding:11px 14px;font-size:13px;color:var(--dim);line-height:1.5;border-top:1px solid var(--line)}
+.err{padding:12px 14px;font-size:14px;color:var(--bad);line-height:1.5}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(8,33,15,.3);border-top-color:#08210f;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
 
 /* ---------- progress ---------- */
 .hero{padding:18px 16px 16px}
@@ -467,6 +483,116 @@ const RECIPES = [
     note: '<b>Half the packet.</b> The full dressing is most of the calories in that kit, and half is plenty once it’s tossed.'
   }
 ];
+
+/* =====================================================================
+   AI meal estimation (Claude Messages API, called straight from the phone)
+
+   There is no backend, so the request goes browser -> api.anthropic.com.
+   That needs the direct-browser-access header, and it means the API key
+   lives in localStorage on this device. It is stored under its own key,
+   separate from DB, so "Export data" never carries the secret.
+   ===================================================================== */
+const AI_KEY_STORE = 'wl.aikey';
+const AI_MODEL = 'claude-opus-5';
+const AI_ENDPOINT = 'https://api.anthropic.com/v1/messages';
+
+const AI_SYSTEM =
+  'You estimate calories and protein for meals someone logs in a personal ' +
+  'weight-loss tracker. Break the meal into its components and give one entry ' +
+  'per component. Estimate real served portions, not idealized ones: restaurant ' +
+  'and takeout servings run large and are cooked with far more oil, butter, and ' +
+  'sugar than a home version. Assume a normal full portion unless the person says ' +
+  'otherwise. Round to whole numbers. Use the note field for the assumptions that ' +
+  'most affect the estimate — portion size, cooking fat, sauces, whether something ' +
+  'was finished — and to flag when the range is genuinely wide. Keep the note to ' +
+  'one or two sentences.';
+
+const AI_SCHEMA = {
+  type: 'object',
+  properties: {
+    items: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          name: { type: 'string', description: 'Short label, e.g. "Hibachi chicken"' },
+          calories: { type: 'integer', description: 'Estimated calories' },
+          protein: { type: 'integer', description: 'Estimated protein in grams' }
+        },
+        required: ['name', 'calories', 'protein'],
+        additionalProperties: false
+      }
+    },
+    note: { type: 'string', description: 'Key assumptions behind the estimate' }
+  },
+  required: ['items', 'note'],
+  additionalProperties: false
+};
+
+function aiKey() {
+  try { return localStorage.getItem(AI_KEY_STORE) || ''; } catch (e) { return ''; }
+}
+function setAiKey(v) {
+  try {
+    if (v) localStorage.setItem(AI_KEY_STORE, v);
+    else localStorage.removeItem(AI_KEY_STORE);
+  } catch (e) {}
+}
+
+async function estimateMeal(text) {
+  let res;
+  try {
+    res = await fetch(AI_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': aiKey(),
+        'anthropic-version': '2023-06-01',
+        /* Required for calls made directly from a browser. */
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: AI_MODEL,
+        max_tokens: 4000,        // headroom: thinking is on by default and shares this cap
+        system: AI_SYSTEM,
+        output_config: {
+          effort: 'low',
+          format: { type: 'json_schema', schema: AI_SCHEMA }
+        },
+        messages: [{ role: 'user', content: text }]
+      })
+    });
+  } catch (e) {
+    /* fetch only rejects on network-level failure — offline, DNS, or CORS */
+    throw new Error('Could not reach Anthropic. This needs a connection — check signal and try again.');
+  }
+
+  if (!res.ok) {
+    let detail = '';
+    try { detail = (await res.json()).error.message; } catch (e) {}
+    if (res.status === 401) throw new Error('Key rejected. Check it in the key field below.');
+    if (res.status === 429) throw new Error('Rate limited. Wait a moment and try again.');
+    if (res.status >= 500) throw new Error('Anthropic is having trouble. Try again shortly.');
+    throw new Error(detail || ('Request failed (' + res.status + ')'));
+  }
+
+  const data = await res.json();
+  if (data.stop_reason === 'refusal') throw new Error('The model declined to answer that one.');
+  if (data.stop_reason === 'max_tokens') throw new Error('Response was cut off. Try a shorter description.');
+
+  const block = (data.content || []).find(b => b.type === 'text');
+  if (!block) throw new Error('Empty response.');
+
+  let parsed;
+  try { parsed = JSON.parse(block.text); }
+  catch (e) { throw new Error('Got an unreadable response back. Try again.'); }
+
+  const items = (parsed.items || []).filter(
+    x => x && x.name && isFinite(x.calories) && isFinite(x.protein)
+  );
+  if (!items.length) throw new Error('Nothing recognizable in that description.');
+  return { items: items, note: parsed.note || '' };
+}
 
 /* =====================================================================
    Storage
@@ -749,6 +875,12 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) { lo
    ===================================================================== */
 let viewDay = todayKey();
 
+/* AI panel state — deliberately in memory only, not persisted */
+let aiText = '';
+let aiResult = null;
+let aiError = '';
+let aiBusy = false;
+
 function dayTotals(k) {
   const items = DB.log[k] || [];
   return items.reduce((a, x) => ({ c: a.c + x.c, p: a.p + x.p }), { c: 0, p: 0 });
@@ -814,10 +946,31 @@ function renderToday() {
       '<button class="btn primary" id="madd" type="button">Add to log</button>' +
     '</div>' +
 
+    '<div class="lbl" style="margin:20px 0 9px">Estimate with AI</div>' +
+    '<div class="ai">' +
+      '<textarea id="ait" placeholder="What did you eat? e.g. DoorDash hibachi — chicken and shrimp, fried rice, noodles, salad with ginger dressing, yum yum sauce">' +
+        esc(aiText) + '</textarea>' +
+      '<button class="btn' + (aiBusy ? '' : ' primary') + '" id="aigo" type="button"' +
+        (aiBusy ? ' disabled' : '') + '>' +
+        (aiBusy ? '<span class="spin"></span> Estimating…' : 'Estimate') + '</button>' +
+      (aiError ? '<div class="card"><div class="err">' + esc(aiError) + '</div></div>' : '') +
+      (aiResult ? aiCard() : '') +
+      (aiKey() ? '' :
+        '<div class="card"><div class="pad">' +
+          '<div class="muted" style="margin-bottom:9px">Needs an Anthropic API key. It is saved ' +
+          'only on this phone, is never included in Export data, and never goes in the repo.</div>' +
+          '<input type="password" id="aikey" placeholder="sk-ant-..." autocomplete="off" ' +
+          'autocapitalize="off" spellcheck="false">' +
+          '<button class="btn" id="aikeysave" type="button" style="margin-top:9px">Save key</button>' +
+        '</div></div>') +
+    '</div>' +
+
     '<div class="lbl" style="margin:22px 0 9px">Logged · ' + items.length + '</div>' +
     '<div class="card" style="margin-bottom:16px">' +
       logHtml.replace('<div class="logrow">', '<div class="logrow" style="border-top:0">') +
     '</div>';
+
+  wireAI();
 
   $('#dprev').addEventListener('click', () => { viewDay = shiftKey(viewDay, -1); renderToday(); });
   $('#dnext').addEventListener('click', () => {
@@ -848,6 +1001,78 @@ function renderToday() {
       if (!DB.log[viewDay].length) delete DB.log[viewDay];
       buzz(8); save(); renderToday();
     });
+  });
+}
+
+/* ---- AI panel rendering + wiring ---- */
+function aiCard() {
+  const t = aiResult.items.reduce(
+    (a, x) => ({ c: a.c + x.calories, p: a.p + x.protein }), { c: 0, p: 0 });
+  return '<div class="card">' +
+    aiResult.items.map((x, i) =>
+      '<div class="airow"><span class="an">' + esc(x.name) + '</span>' +
+      '<span class="am">' + commas(x.calories) + ' cal · ' + Math.round(x.protein) + 'g</span>' +
+      '<button class="del" type="button" data-aidrop="' + i + '" ' +
+      'aria-label="Remove ' + esc(x.name) + '">×</button></div>'
+    ).join('') +
+    '<div class="aitot"><span class="k">Total</span><span class="v">' +
+      commas(t.c) + ' cal · ' + Math.round(t.p) + 'g</span></div>' +
+    (aiResult.note ? '<div class="ainote">' + esc(aiResult.note) + '</div>' : '') +
+    '<div style="padding:12px 14px 14px">' +
+      '<button class="btn primary" id="aiadd" type="button">Add ' + aiResult.items.length +
+      (aiResult.items.length === 1 ? ' item' : ' items') + ' to log</button>' +
+      '<button class="btn ghost" id="aidiscard" type="button" style="margin-top:9px">Discard</button>' +
+    '</div></div>';
+}
+
+function wireAI() {
+  const ta = $('#ait');
+  if (ta) ta.addEventListener('input', () => { aiText = ta.value; });
+
+  const keySave = $('#aikeysave');
+  if (keySave) keySave.addEventListener('click', () => {
+    const v = $('#aikey').value.trim();
+    if (!v) { $('#aikey').focus(); return; }
+    setAiKey(v); renderToday();
+  });
+
+  const go = $('#aigo');
+  if (go) go.addEventListener('click', async () => {
+    const text = (($('#ait') || {}).value || '').trim();
+    if (!text) { if ($('#ait')) $('#ait').focus(); return; }
+    if (!aiKey()) { aiError = 'Add your API key below first.'; renderToday(); return; }
+
+    aiText = text; aiError = ''; aiResult = null; aiBusy = true; renderToday();
+    try {
+      aiResult = await estimateMeal(text);
+    } catch (e) {
+      aiError = (e && e.message) ? e.message :
+        'Could not reach Anthropic. Check your connection.';
+    }
+    aiBusy = false; buzz(10); renderToday();
+  });
+
+  $('#p-today').querySelectorAll('[data-aidrop]').forEach(el => {
+    el.addEventListener('click', () => {
+      aiResult.items.splice(+el.dataset.aidrop, 1);
+      if (!aiResult.items.length) aiResult = null;
+      renderToday();
+    });
+  });
+
+  const discard = $('#aidiscard');
+  if (discard) discard.addEventListener('click', () => { aiResult = null; renderToday(); });
+
+  const add = $('#aiadd');
+  if (add) add.addEventListener('click', () => {
+    if (!DB.log[viewDay]) DB.log[viewDay] = [];
+    aiResult.items.forEach(x => {
+      DB.log[viewDay].push({
+        id: Date.now() + '' + Math.floor(Math.random() * 1000),
+        n: x.name, c: x.calories, p: x.protein
+      });
+    });
+    aiResult = null; aiText = ''; buzz(12); save(); renderToday();
   });
 }
 
