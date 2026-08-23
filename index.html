@@ -335,154 +335,84 @@ const START_DATE = '2026-08-17';
 const GOAL_DATE  = '2027-03-01';
 
 /* =====================================================================
-   Static data
+   Weekly plan
+
+   Groceries, quick-adds, and recipes live in week.json — not in here — so
+   a new week is a one-file edit with no app changes. The last good copy is
+   kept in localStorage, so the app opens instantly and works offline; a
+   fresh copy is fetched in the background every time it opens.
+
+   When week.json's weekId changes, last week's checked groceries and
+   recipe step marks are cleared. Step state is keyed by recipe id, so
+   carrying it into new content would show new steps as already done.
    ===================================================================== */
-const GROCERIES = [
-  ['Protein', [
-    ['Chicken thighs', '3 lbs'],
-    ['Ground turkey, 93/7', '1.25 lbs'],
-    ['Top sirloin', '8 oz'],
-    ['Eggs', '1 dozen'],
-    ['Whey protein powder', '']
-  ]],
-  ['Produce', [
-    ['Sweet potatoes', '3'],
-    ['Broccoli', '2 crowns'],
-    ['Green beans', '1 steam bag'],
-    ['Caesar salad kit', ''],
-    ['Yellow onion', ''],
-    ['Bell pepper', ''],
-    ['Limes', '2'],
-    ['Garlic', '']
-  ]],
-  ['Dairy', [
-    ['Fairlife milk', '52 oz'],
-    ['Zero-sugar creamer', ''],
-    ['Nonfat Greek yogurt', '32 oz'],
-    ['Cottage cheese', '24 oz'],
-    ['Shredded Mexican cheese', '8 oz']
-  ]],
-  ['Pantry', [
-    ['Microwave rice pouches', '4'],
-    ['Salsa', ''],
-    ['Taco seasoning', ''],
-    ['High-fiber tortillas', ''],
-    ['Frozen berries', ''],
-    ['Olive oil', ''],
-    ['Chili powder', ''],
-    ['Cumin', ''],
-    ['Smoked paprika', '']
-  ]]
-];
+const PLAN_STORE = 'wl.plan';
 
-const QUICK = [
-  ['Morning latte',        135, 13],
-  ['Sheet-pan chicken',    660, 57],
-  ['Turkey burrito bowl',  580, 53],
-  ['Sirloin + rice + GB',  710, 54],
-  ['Chicken Caesar wrap',  500, 58],
-  ['Cottage cheese, 1c',   180, 24],
-  ['Greek yogurt + berries',180, 20],
-  ['Whey shake in water',  130, 25],
-  ['2 hard-boiled eggs',   140, 12]
-];
+/* weekId null means "no plan loaded yet" — every panel renders empty
+   rather than throwing, so Today and Progress still work offline. */
+let PLAN = { weekId: null, label: '', groceries: [], quickAdds: [], recipes: [] };
+let planFailed = false;
 
-/* timers: [label, seconds] */
-const RECIPES = [
-  {
-    id: 'sheetpan',
-    name: 'Sheet-Pan Chicken, Sweet Potato & Broccoli',
-    time: '70 min', serves: 3, cal: 660, pro: 57,
-    ing: [
-      '2 lbs chicken thighs',
-      '1.5 lbs chicken breasts <em>(these are for Friday — see step 6)</em>',
-      '3 sweet potatoes, 3/4" cubes',
-      '2 broccoli crowns, florets',
-      '3 tbsp olive oil · 4 cloves garlic, minced',
-      '2 tsp smoked paprika · 1 tsp cumin · 1 tsp chili powder · 1.5 tsp salt · pepper'
-    ],
-    steps: [
-      { t: 'Oven to 425°F. Two sheet pans — don’t crowd them. Crowding steams instead of roasts.' },
-      { t: 'Toss sweet potatoes with 1 tbsp oil and a third of the spice mix. Spread on pan 1. Roast 15 min alone.',
-        timers: [['Potatoes', 900]] },
-      { t: 'Toss the thighs <em>and</em> breasts with 1 tbsp oil, the garlic, and half the remaining spice.' },
-      { t: 'Pull pan 1, push potatoes aside, add all the chicken. Back in.' },
-      { t: 'Toss broccoli with the last tbsp oil and remaining spice. Pan 2, roast 18 min alongside.',
-        timers: [['Broccoli', 1080]] },
-      { t: '<b>Pull the breasts at 165°F</b> — around 18 min. Leave the thighs until 175°F, around 22 min. Rest everything 5 min.',
-        timers: [['Breasts 18m', 1080], ['Thighs 22m', 1320], ['Rest 5m', 300]] },
-      { t: 'Shred the breasts, container them separately. That’s Friday’s wrap and Saturday’s lunch.' },
-      { t: 'Divide the rest into 3: ~8 oz thigh meat, one potato’s worth, a third of the broccoli.' }
-    ],
-    note: '<b>Thighs for the leftovers, breasts for the wrap.</b> Thighs reheat without turning to rubber, which matters when you’re eating this three times. Breasts shred better cold and the Caesar dressing carries them.'
-  },
-  {
-    id: 'burrito',
-    name: 'Ground Turkey Burrito Bowls',
-    time: '20 min', serves: 3, cal: 580, pro: 53,
-    ing: [
-      '1.25 lbs ground turkey 93/7',
-      '1 onion + 1 bell pepper, diced',
-      '1 packet taco seasoning',
-      '2 microwave rice pouches',
-      'Cheese, salsa, Greek yogurt, lime'
-    ],
-    steps: [
-      { t: 'Medium-high, splash of oil. Onion and pepper, 4 min.', timers: [['Veg 4m', 240]] },
-      { t: 'Add turkey. Break it up, cook until no pink, ~7 min.', timers: [['Turkey 7m', 420]] },
-      { t: 'Taco seasoning + 1/3 cup water. Simmer 3 min until it thickens.', timers: [['Simmer 3m', 180]] },
-      { t: 'Squeeze in half a lime and stir. Off the heat.' },
-      { t: 'Microwave both rice pouches.' },
-      { t: 'Three containers: rice base, turkey on top. Keep the yogurt <em>out</em>.' }
-    ],
-    extra: {
-      label: 'Add when you eat',
-      items: [
-        '1 oz cheese · 2 tbsp salsa',
-        '2 tbsp Greek yogurt — your sour cream, same texture, 3g protein instead of 0',
-        'Squeeze of lime'
-      ]
-    }
-  },
-  {
-    id: 'sirloin',
-    name: 'Sirloin, Rice & Green Beans',
-    time: '15 min', serves: 1, cal: 710, pro: 54,
-    ing: [
-      '8 oz top sirloin',
-      '1 rice pouch · 1 bag microwave green beans',
-      'Salt, pepper, garlic clove, butter'
-    ],
-    steps: [
-      { t: 'Pat dry, salt both sides generously. Let it sit while the pan heats — 10 min of salt beats any marinade.',
-        timers: [['Salt 10m', 600]] },
-      { t: 'Cast iron on high until it just starts to smoke. Thin film of oil.' },
-      { t: 'Steak in. <b>Don’t move it.</b> 3–4 min per side for medium.',
-        timers: [['Side 1', 240], ['Side 2', 240]] },
-      { t: 'Last minute: smashed garlic clove and a pat of butter, spoon it over.' },
-      { t: 'Pull at 135°F for medium. Rest 5 full minutes — cutting early dumps the juice.',
-        timers: [['Rest 5m', 300]] },
-      { t: 'Rice and green beans in the microwave while it rests. Slice against the grain.' }
-    ],
-    note: '<b>Not feeling steak?</b> Shrimp (thaw under cold water 5 min, cook 4) or pork tenderloin medallions. Same sides, same slot.'
-  },
-  {
-    id: 'caesar',
-    name: 'Chicken Caesar Wrap',
-    time: '5 min, no cooking', serves: 1, cal: 500, pro: 58,
-    ing: [
-      '~6 oz shredded chicken breast (from Monday)',
-      '2 cups Caesar greens + half the dressing packet',
-      '1 high-fiber tortilla · parmesan'
-    ],
-    steps: [
-      { t: 'Grab ~6 oz of the shredded breast you set aside Monday.' },
-      { t: 'Toss with 2 cups Caesar greens and <b>half</b> the dressing packet.' },
-      { t: 'Pile into a high-fiber tortilla with a sprinkle of the parmesan. Roll tight.' }
-    ],
-    note: '<b>Half the packet.</b> The full dressing is most of the calories in that kit, and half is plenty once it’s tossed.'
+function validPlan(p) {
+  return !!p && typeof p.weekId === 'string' && !!p.weekId
+    && Array.isArray(p.groceries) && Array.isArray(p.quickAdds) && Array.isArray(p.recipes)
+    && p.groceries.every(s => s && typeof s.section === 'string' && Array.isArray(s.items)
+         && s.items.every(i => i && typeof i.name === 'string'))
+    && p.quickAdds.every(q => q && typeof q.name === 'string'
+         && isFinite(q.cal) && isFinite(q.pro))
+    && p.recipes.every(r => r && typeof r.id === 'string' && typeof r.name === 'string'
+         && Array.isArray(r.steps) && r.steps.every(s => s && typeof s.t === 'string'));
+}
+
+function applyPlan(p) {
+  PLAN = p;
+  planFailed = false;
+  if (DB.weekId !== p.weekId) {
+    DB.weekId = p.weekId;
+    DB.grocery = {};      // last week's checkmarks
+    DB.steps = {};        // keyed by recipe id — must not survive new content
+    DB.open = null;
+    save();
   }
-];
+}
+
+function cachedPlan() {
+  try {
+    const raw = localStorage.getItem(PLAN_STORE);
+    if (!raw) return null;
+    const p = JSON.parse(raw);
+    return validPlan(p) ? p : null;
+  } catch (e) { return null; }
+}
+
+async function refreshPlan() {
+  let p;
+  try {
+    const res = await fetch('./week.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error(res.status);
+    p = await res.json();
+  } catch (e) {
+    if (PLAN.weekId === null) { planFailed = true; render(); }
+    return;                      // offline: the cached plan stands
+  }
+  if (!validPlan(p)) {
+    if (PLAN.weekId === null) { planFailed = true; render(); }
+    return;                      // malformed edit: keep the last good copy
+  }
+  const next = JSON.stringify(p);
+  if (next === JSON.stringify(PLAN)) return;
+  try { localStorage.setItem(PLAN_STORE, next); } catch (e) {}
+  applyPlan(p);
+  render();
+}
+
+/* Caption shown on the Groceries and Recipes tabs. */
+function planHead() {
+  if (PLAN.weekId) return '<div class="lbl" style="margin:2px 0 11px">' + esc(PLAN.label) + '</div>';
+  return '<div class="card"><div class="empty">' +
+    (planFailed ? 'Could not load week.json. Reconnect and reopen.' : 'Loading this week’s plan…') +
+    '</div></div>';
+}
 
 /* =====================================================================
    AI meal estimation (Claude Messages API, called straight from the phone)
@@ -598,7 +528,7 @@ async function estimateMeal(text) {
    Storage
    ===================================================================== */
 const KEY = 'wl.v1';
-const BLANK = { grocery: {}, steps: {}, log: {}, weight: {}, timer: null, open: null };
+const BLANK = { grocery: {}, steps: {}, log: {}, weight: {}, timer: null, open: null, weekId: null };
 let DB = Object.assign({}, BLANK);
 
 function load() {
@@ -688,9 +618,10 @@ document.querySelectorAll('nav button').forEach(b => {
    ===================================================================== */
 function renderGrocery() {
   let got = 0, all = 0;
-  const html = GROCERIES.map(([sec, items]) => {
+  const html = PLAN.groceries.map(sec => {
     /* keyed by name, not index — editing the list must not shift what's checked */
-    const marked = items.map(it => ({ txt: it[0], qty: it[1], k: sec + '::' + it[0] }));
+    const marked = sec.items.map(it =>
+      ({ txt: it.name, qty: it.qty || '', k: sec.section + '::' + it.name }));
     const on = marked.filter(m => DB.grocery[m.k]);
     const off = marked.filter(m => !DB.grocery[m.k]);
     got += on.length; all += marked.length;
@@ -705,13 +636,13 @@ function renderGrocery() {
     )).join('');
 
     return '<div class="card">' +
-      '<div class="sec-head"><span class="t">' + esc(sec) + '</span>' +
+      '<div class="sec-head"><span class="t">' + esc(sec.section) + '</span>' +
       '<span class="n' + (on.length === marked.length ? ' done' : '') + '">' +
       on.length + '/' + marked.length + '</span></div>' +
       rows + '</div>';
   }).join('');
 
-  $('#p-grocery').innerHTML = html +
+  $('#p-grocery').innerHTML = planHead() + html +
     '<button class="btn ghost" id="greset" type="button" style="margin-bottom:14px">Reset list</button>';
   $('#hsub').textContent = got + ' of ' + all;
 
@@ -733,8 +664,8 @@ function renderGrocery() {
    2. Recipes
    ===================================================================== */
 function renderRecipes() {
-  $('#hsub').textContent = '';
-  $('#p-recipes').innerHTML = RECIPES.map(r => {
+  $('#hsub').textContent = PLAN.recipes.length ? PLAN.recipes.length + ' recipes' : '';
+  $('#p-recipes').innerHTML = planHead() + PLAN.recipes.map(r => {
     const open = DB.open === r.id;
     const doneCount = r.steps.filter((s, i) => DB.steps[r.id + '::' + i]).length;
 
@@ -929,11 +860,13 @@ function renderToday() {
 
     '<div class="lbl" style="margin:18px 0 9px">Quick add</div>' +
     '<div class="qgrid">' +
-      QUICK.map((q, i) =>
-        '<button class="q" type="button" data-q="' + i + '">' +
-        '<div class="qn">' + esc(q[0]) + '</div>' +
-        '<div class="qm">' + commas(q[1]) + ' cal · ' + q[2] + 'g</div></button>'
-      ).join('') +
+      (PLAN.quickAdds.length
+        ? PLAN.quickAdds.map((q, i) =>
+            '<button class="q" type="button" data-q="' + i + '">' +
+            '<div class="qn">' + esc(q.name) + '</div>' +
+            '<div class="qm">' + commas(q.cal) + ' cal · ' + q.pro + 'g</div></button>'
+          ).join('')
+        : '<div class="empty" style="grid-column:1/-1">No quick-add items in week.json.</div>') +
     '</div>' +
 
     '<div class="lbl" style="margin:20px 0 9px">Manual entry</div>' +
@@ -980,8 +913,8 @@ function renderToday() {
 
   $('#p-today').querySelectorAll('[data-q]').forEach(el => {
     el.addEventListener('click', () => {
-      const q = QUICK[+el.dataset.q];
-      addItem(q[0], q[1], q[2]);
+      const q = PLAN.quickAdds[+el.dataset.q];
+      addItem(q.name, q.cal, q.pro);
     });
   });
 
@@ -1300,8 +1233,11 @@ function render() {
 }
 
 load();
+const boot = cachedPlan();
+if (boot) applyPlan(boot);
 render();
 tick();
+refreshPlan();
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {

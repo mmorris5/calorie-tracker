@@ -1,8 +1,9 @@
 /* Offline cache. Bump CACHE when index.html changes so the phone picks it up. */
-const CACHE = 'wl-v4';
+const CACHE = 'wl-v5';
 const ASSETS = [
   './',
   './index.html',
+  './week.json',
   './manifest.webmanifest',
   './icon-180.png',
   './icon-512.png'
@@ -25,6 +26,19 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
+
+  /* week.json is the one file that changes weekly — go to the network first
+     so a new week lands on the next open, not the one after. */
+  if (new URL(req.url).pathname.endsWith('/week.json')) {
+    e.respondWith(
+      fetch(req).then(res => {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(req, copy));
+        return res;
+      }).catch(() => caches.match(req))
+    );
+    return;
+  }
 
   e.respondWith(
     caches.match(req).then(hit => {

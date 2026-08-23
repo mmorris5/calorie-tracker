@@ -1,0 +1,177 @@
+{
+  "weekId": "2026-08-17",
+  "label": "Week of Aug 17",
+
+  "groceries": [
+    {
+      "section": "Protein",
+      "items": [
+        {"name":"Chicken thighs","qty":"3 lbs"},
+        {"name":"Ground turkey, 93/7","qty":"1.25 lbs"},
+        {"name":"Top sirloin","qty":"8 oz"},
+        {"name":"Eggs","qty":"1 dozen"},
+        {"name":"Whey protein powder"}
+      ]
+    },
+    {
+      "section": "Produce",
+      "items": [
+        {"name":"Sweet potatoes","qty":"3"},
+        {"name":"Broccoli","qty":"2 crowns"},
+        {"name":"Green beans","qty":"1 steam bag"},
+        {"name":"Caesar salad kit"},
+        {"name":"Yellow onion"},
+        {"name":"Bell pepper"},
+        {"name":"Limes","qty":"2"},
+        {"name":"Garlic"}
+      ]
+    },
+    {
+      "section": "Dairy",
+      "items": [
+        {"name":"Fairlife milk","qty":"52 oz"},
+        {"name":"Zero-sugar creamer"},
+        {"name":"Nonfat Greek yogurt","qty":"32 oz"},
+        {"name":"Cottage cheese","qty":"24 oz"},
+        {"name":"Shredded Mexican cheese","qty":"8 oz"}
+      ]
+    },
+    {
+      "section": "Pantry",
+      "items": [
+        {"name":"Microwave rice pouches","qty":"4"},
+        {"name":"Salsa"},
+        {"name":"Taco seasoning"},
+        {"name":"High-fiber tortillas"},
+        {"name":"Frozen berries"},
+        {"name":"Olive oil"},
+        {"name":"Chili powder"},
+        {"name":"Cumin"},
+        {"name":"Smoked paprika"}
+      ]
+    }
+  ],
+
+  "quickAdds": [
+    {"name":"Morning latte","cal":135,"pro":13},
+    {"name":"Sheet-pan chicken","cal":660,"pro":57},
+    {"name":"Turkey burrito bowl","cal":580,"pro":53},
+    {"name":"Sirloin + rice + GB","cal":710,"pro":54},
+    {"name":"Chicken Caesar wrap","cal":500,"pro":58},
+    {"name":"Cottage cheese, 1c","cal":180,"pro":24},
+    {"name":"Greek yogurt + berries","cal":180,"pro":20},
+    {"name":"Whey shake in water","cal":130,"pro":25},
+    {"name":"2 hard-boiled eggs","cal":140,"pro":12}
+  ],
+
+  "recipes": [
+    {
+      "id": "sheetpan",
+      "name": "Sheet-Pan Chicken, Sweet Potato & Broccoli",
+      "time": "70 min",
+      "serves": 3,
+      "cal": 660,
+      "pro": 57,
+      "ing": [
+        "2 lbs chicken thighs",
+        "1.5 lbs chicken breasts <em>(these are for Friday — see step 6)</em>",
+        "3 sweet potatoes, 3/4\" cubes",
+        "2 broccoli crowns, florets",
+        "3 tbsp olive oil · 4 cloves garlic, minced",
+        "2 tsp smoked paprika · 1 tsp cumin · 1 tsp chili powder · 1.5 tsp salt · pepper"
+      ],
+      "steps": [
+        { "t": "Oven to 425°F. Two sheet pans — don’t crowd them. Crowding steams instead of roasts." },
+        { "t": "Toss sweet potatoes with 1 tbsp oil and a third of the spice mix. Spread on pan 1. Roast 15 min alone.",
+          "timers": [["Potatoes",900]] },
+        { "t": "Toss the thighs <em>and</em> breasts with 1 tbsp oil, the garlic, and half the remaining spice." },
+        { "t": "Pull pan 1, push potatoes aside, add all the chicken. Back in." },
+        { "t": "Toss broccoli with the last tbsp oil and remaining spice. Pan 2, roast 18 min alongside.",
+          "timers": [["Broccoli",1080]] },
+        { "t": "<b>Pull the breasts at 165°F</b> — around 18 min. Leave the thighs until 175°F, around 22 min. Rest everything 5 min.",
+          "timers": [["Breasts 18m",1080],["Thighs 22m",1320],["Rest 5m",300]] },
+        { "t": "Shred the breasts, container them separately. That’s Friday’s wrap and Saturday’s lunch." },
+        { "t": "Divide the rest into 3: ~8 oz thigh meat, one potato’s worth, a third of the broccoli." }
+      ],
+      "note": "<b>Thighs for the leftovers, breasts for the wrap.</b> Thighs reheat without turning to rubber, which matters when you’re eating this three times. Breasts shred better cold and the Caesar dressing carries them."
+    },
+    {
+      "id": "burrito",
+      "name": "Ground Turkey Burrito Bowls",
+      "time": "20 min",
+      "serves": 3,
+      "cal": 580,
+      "pro": 53,
+      "ing": [
+        "1.25 lbs ground turkey 93/7",
+        "1 onion + 1 bell pepper, diced",
+        "1 packet taco seasoning",
+        "2 microwave rice pouches",
+        "Cheese, salsa, Greek yogurt, lime"
+      ],
+      "steps": [
+        { "t": "Medium-high, splash of oil. Onion and pepper, 4 min.",
+          "timers": [["Veg 4m",240]] },
+        { "t": "Add turkey. Break it up, cook until no pink, ~7 min.",
+          "timers": [["Turkey 7m",420]] },
+        { "t": "Taco seasoning + 1/3 cup water. Simmer 3 min until it thickens.",
+          "timers": [["Simmer 3m",180]] },
+        { "t": "Squeeze in half a lime and stir. Off the heat." },
+        { "t": "Microwave both rice pouches." },
+        { "t": "Three containers: rice base, turkey on top. Keep the yogurt <em>out</em>." }
+      ],
+      "extra": {
+        "label": "Add when you eat",
+        "items": [
+          "1 oz cheese · 2 tbsp salsa",
+          "2 tbsp Greek yogurt — your sour cream, same texture, 3g protein instead of 0",
+          "Squeeze of lime"
+        ]
+      }
+    },
+    {
+      "id": "sirloin",
+      "name": "Sirloin, Rice & Green Beans",
+      "time": "15 min",
+      "serves": 1,
+      "cal": 710,
+      "pro": 54,
+      "ing": [
+        "8 oz top sirloin",
+        "1 rice pouch · 1 bag microwave green beans",
+        "Salt, pepper, garlic clove, butter"
+      ],
+      "steps": [
+        { "t": "Pat dry, salt both sides generously. Let it sit while the pan heats — 10 min of salt beats any marinade.",
+          "timers": [["Salt 10m",600]] },
+        { "t": "Cast iron on high until it just starts to smoke. Thin film of oil." },
+        { "t": "Steak in. <b>Don’t move it.</b> 3–4 min per side for medium.",
+          "timers": [["Side 1",240],["Side 2",240]] },
+        { "t": "Last minute: smashed garlic clove and a pat of butter, spoon it over." },
+        { "t": "Pull at 135°F for medium. Rest 5 full minutes — cutting early dumps the juice.",
+          "timers": [["Rest 5m",300]] },
+        { "t": "Rice and green beans in the microwave while it rests. Slice against the grain." }
+      ],
+      "note": "<b>Not feeling steak?</b> Shrimp (thaw under cold water 5 min, cook 4) or pork tenderloin medallions. Same sides, same slot."
+    },
+    {
+      "id": "caesar",
+      "name": "Chicken Caesar Wrap",
+      "time": "5 min, no cooking",
+      "serves": 1,
+      "cal": 500,
+      "pro": 58,
+      "ing": [
+        "~6 oz shredded chicken breast (from Monday)",
+        "2 cups Caesar greens + half the dressing packet",
+        "1 high-fiber tortilla · parmesan"
+      ],
+      "steps": [
+        { "t": "Grab ~6 oz of the shredded breast you set aside Monday." },
+        { "t": "Toss with 2 cups Caesar greens and <b>half</b> the dressing packet." },
+        { "t": "Pile into a high-fiber tortilla with a sprinkle of the parmesan. Roll tight." }
+      ],
+      "note": "<b>Half the packet.</b> The full dressing is most of the calories in that kit, and half is plenty once it’s tossed."
+    }
+  ]
+}
