@@ -41,14 +41,15 @@
       "section": "Pantry",
       "items": [
         {"name":"Microwave rice pouches","qty":"6"},
-        {"name":"High-fiber tortillas"},
         {"name":"Frozen berries"},
         {"name":"Low-sodium soy sauce"},
         {"name":"Sesame oil"},
         {"name":"Honey"},
         {"name":"Olive oil","qty":"if low"},
         {"name":"Salsa"},
-        {"name":"Taco seasoning","qty":"1 packet"}
+        {"name":"Taco seasoning","qty":"1 packet"},
+        {"name":"Smoked paprika","qty":"if low"},
+        {"name":"Garlic powder","qty":"if low"}
       ]
     }
   ],
