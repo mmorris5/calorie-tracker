@@ -1,14 +1,14 @@
 {
-  "weekId": "2026-08-24",
-  "label": "Week of Aug 24",
+  "weekId": "2026-08-31",
+  "label": "Week of Aug 31",
 
   "groceries": [
     {
       "section": "Protein",
       "items": [
-        {"name":"Pork tenderloin","qty":"2.5 lbs (2 pieces)"},
-        {"name":"Chicken breasts","qty":"1.5 lbs"},
-        {"name":"Ground turkey, 93/7","qty":"1.25 lbs"},
+        {"name":"Ground beef, 93/7","qty":"1.25 lbs"},
+        {"name":"Chicken breasts","qty":"2.5 lbs"},
+        {"name":"Chicken sausage","qty":"2 packs (~8 links)"},
         {"name":"Eggs","qty":"1 dozen"},
         {"name":"Whey protein powder","qty":"if low"}
       ]
@@ -17,13 +17,11 @@
       "section": "Produce",
       "items": [
         {"name":"Baby potatoes","qty":"1.5 lbs"},
-        {"name":"Brussels sprouts","qty":"1 lb"},
-        {"name":"Broccoli","qty":"2 crowns"},
-        {"name":"Yellow onion"},
-        {"name":"Bell pepper"},
+        {"name":"Bell peppers","qty":"3, mixed colors"},
+        {"name":"Red onion","qty":"1"},
+        {"name":"Shredded carrots","qty":"1 bag"},
+        {"name":"Celery","qty":"1 bunch"},
         {"name":"Scallions","qty":"1 bunch"},
-        {"name":"Fresh ginger","qty":"thumb-sized"},
-        {"name":"Garlic","qty":"1 head"},
         {"name":"Limes","qty":"2"}
       ]
     },
@@ -32,34 +30,35 @@
       "items": [
         {"name":"Fairlife milk","qty":"52 oz"},
         {"name":"Zero-sugar creamer"},
-        {"name":"Nonfat Greek yogurt","qty":"32 oz"},
         {"name":"Cottage cheese","qty":"24 oz"},
-        {"name":"Shredded cheese","qty":"8 oz"}
+        {"name":"Nonfat Greek yogurt","qty":"32 oz"},
+        {"name":"Shredded cheddar","qty":"16 oz"}
       ]
     },
     {
       "section": "Pantry",
       "items": [
-        {"name":"Microwave rice pouches","qty":"6"},
+        {"name":"Elbow pasta","qty":"8 oz"},
+        {"name":"Microwave rice pouches","qty":"4"},
+        {"name":"Salsa","qty":"1 jar"},
+        {"name":"Buffalo sauce","qty":"1 bottle (Frank's)"},
+        {"name":"Dijon mustard","qty":"small"},
         {"name":"Frozen berries"},
-        {"name":"Low-sodium soy sauce"},
-        {"name":"Sesame oil"},
-        {"name":"Honey"},
         {"name":"Olive oil","qty":"if low"},
-        {"name":"Salsa"},
-        {"name":"Taco seasoning","qty":"1 packet"},
-        {"name":"Smoked paprika","qty":"if low"},
-        {"name":"Garlic powder","qty":"if low"}
+        {"name":"Italian seasoning","qty":"if low"},
+        {"name":"Garlic powder","qty":"if low"},
+        {"name":"Onion powder","qty":"if low"},
+        {"name":"Smoked paprika","qty":"if low"}
       ]
     }
   ],
 
   "quickAdds": [
     {"name":"Morning latte","cal":135,"pro":13},
-    {"name":"Sheet-pan pork portion","cal":620,"pro":54},
-    {"name":"Chicken broccoli stir-fry","cal":590,"pro":58},
-    {"name":"Turkey burrito bowl","cal":580,"pro":53},
-    {"name":"Pork carnitas bowl","cal":560,"pro":50},
+    {"name":"Protein mac & cheese","cal":620,"pro":59},
+    {"name":"Salsa chicken + rice","cal":570,"pro":64},
+    {"name":"Sausage, peppers + potatoes","cal":630,"pro":44},
+    {"name":"Buffalo chicken bowl","cal":615,"pro":65},
     {"name":"Cottage cheese, 1c","cal":180,"pro":24},
     {"name":"Greek yogurt + berries","cal":180,"pro":20},
     {"name":"Whey shake in water","cal":130,"pro":25},
@@ -68,115 +67,103 @@
 
   "recipes": [
     {
-      "id": "porksheet",
-      "name": "Sheet-Pan Pork Tenderloin, Potatoes & Brussels",
-      "time": "50 min",
+      "id": "buffalobowl",
+      "name": "Buffalo Chicken Bowl",
+      "time": "5 min, no cooking",
+      "serves": 1,
+      "cal": 615,
+      "pro": 65,
+      "ing": [
+        "~6 oz of the plain shredded chicken from the Monday bake <em>(the tray makes two bowls)</em>",
+        "1 microwave rice pouch",
+        "2 tbsp buffalo sauce · 2 tbsp Greek yogurt · 0.5 oz shredded cheddar",
+        "Shredded carrots, sliced celery, scallions"
+      ],
+      "steps": [
+        { "t": "Take about 6 oz of the plain shredded chicken out of the fridge." },
+        { "t": "Toss it with the buffalo sauce until every shred is coated. Do this cold — the sauce clings better than it does on hot chicken." },
+        { "t": "Rice pouch in the microwave.",
+          "timers": [["Rice",90]] },
+        { "t": "Rice down, buffalo chicken on top, then carrots, celery, yogurt, cheddar, and scallions." }
+      ],
+      "note": "<b>This is the week’s insurance policy.</b> On a night when nothing is prepped and you do not want to cook, it is five minutes of assembly and 65g of protein — because Monday already did the cooking."
+    },
+    {
+      "id": "salsachicken",
+      "name": "Dump-and-Bake Salsa Chicken",
+      "time": "30 min, 5 min of work",
+      "serves": 3,
+      "cal": 570,
+      "pro": 64,
+      "ing": [
+        "1.5 lbs chicken breasts for the salsa dish",
+        "1 lb chicken breasts, plain <em>(these become two buffalo bowls — see step 2)</em>",
+        "1 jar chunky salsa",
+        "3 oz shredded cheddar",
+        "2 microwave rice pouches",
+        "Greek yogurt and lime to finish"
+      ],
+      "steps": [
+        { "t": "Oven to 400°F. Put 1.5 lbs of chicken in a baking dish and <b>pour the entire jar of salsa over it.</b> No seasoning, no oil, no browning. That is the whole prep." },
+        { "t": "Put the other 1 lb on a foil-lined tray, salt and pepper, nothing else. Both go in together — <b>same oven, same 25 minutes, no extra work.</b>" },
+        { "t": "Bake 25 min, until both hit 165°F.",
+          "timers": [["Bake",1500]] },
+        { "t": "Shred the salsa chicken with two forks <em>right in the dish</em> so the meat drinks the salsa back up. This is the step that makes it taste like something." },
+        { "t": "Cheddar over the salsa dish, back in the oven 3 min to melt.",
+          "timers": [["Melt",180]] },
+        { "t": "Shred the plain tray separately and container it — that is two buffalo bowls for later in the week." },
+        { "t": "Boil the eggs now while the oven is still hot. Microwave the rice. Three containers of salsa chicken." }
+      ],
+      "note": "<b>Two trays, one oven, one timer.</b> The plain tray costs you nothing but a sheet of foil, and it means the buffalo bowls later in the week are pure assembly with no cooking at all."
+    },
+    {
+      "id": "sausagepan",
+      "name": "Sheet-Pan Sausage, Peppers & Potatoes",
+      "time": "35 min, 5 min of work",
+      "serves": 3,
+      "cal": 630,
+      "pro": 44,
+      "ing": [
+        "2 packs chicken sausage, sliced into thick coins",
+        "3 bell peppers (use three different colors), thick strips",
+        "1 red onion, wedges",
+        "1.5 lbs baby potatoes, halved",
+        "1 tbsp olive oil · Italian seasoning · garlic powder"
+      ],
+      "steps": [
+        { "t": "Oven to 425°F. Potatoes cut-side down with the oil, Italian seasoning, and garlic powder. Roast 15 min alone — they need the head start.",
+          "timers": [["Potatoes",900]] },
+        { "t": "Meanwhile slice the sausage and peppers thick. Thick, not thin — thin strips go limp and disappear." },
+        { "t": "Everything onto the pan, toss once, back in for 18 min. <b>Pull it when the pepper edges char.</b> Those blackened edges are where the flavor is.",
+          "timers": [["Sausage + peppers",1080]] },
+        { "t": "Three containers." }
+      ],
+      "note": "<b>Three colors of pepper, not three of the same.</b> Costs the same and it is the difference between a meal you look forward to and a beige tray — which is exactly what went wrong with last week’s stir-fry."
+    },
+    {
+      "id": "promac",
+      "name": "Protein Mac & Cheese",
+      "time": "20 min, one pot",
       "serves": 3,
       "cal": 620,
-      "pro": 54,
+      "pro": 59,
       "ing": [
-        "2.5 lbs pork tenderloin <em>(one piece is for Friday — see step 6)</em>",
-        "1.5 lbs baby potatoes, halved",
-        "1 lb Brussels sprouts, halved",
-        "2 tbsp olive oil · 4 cloves garlic, minced",
-        "2 tsp smoked paprika · 1 tsp garlic powder · 1.5 tsp salt · pepper"
+        "1.25 lbs ground beef 93/7",
+        "6 oz elbow pasta",
+        "1.5 cups cottage cheese",
+        "4 oz shredded cheddar · splash of Fairlife milk",
+        "1 tsp Dijon · garlic powder · onion powder · smoked paprika"
       ],
       "steps": [
-        { "t": "Oven to 425°F. Pull the pork out now — 20 min at room temperature cooks far more evenly than straight from the fridge." },
-        { "t": "Toss potatoes cut-side down with 1 tbsp oil and a third of the spice. Roast 15 min alone.",
-          "timers": [["Potatoes",900]] },
-        { "t": "Pat both tenderloins dry, rub with the remaining oil, garlic, and spice. <b>Dry surface or no crust</b> — this is the whole game." },
-        { "t": "Pull the pan, push potatoes aside, add both tenderloins and the sprouts cut-side down. Back in for 18–20 min.",
-          "timers": [["Pork + sprouts",1200]] },
-        { "t": "<b>Pull at 145°F.</b> Pork tenderloin goes from juicy to chalky in about 4 minutes — use a thermometer, not the clock. Rest 8 min before slicing.",
-          "timers": [["Rest",480]] },
-        { "t": "Slice one tenderloin into 3 dinners with the potatoes and sprouts. Shred the second one and container it separately — that is Friday." },
-        { "t": "Boil the eggs now while the oven is still hot and you are already standing here." }
+        { "t": "Pasta into boiling salted water, 10 min.",
+          "timers": [["Pasta",600]] },
+        { "t": "While it boils: beef in a skillet over medium-high, break it up, cook until no pink, ~7 min. Salt it well.",
+          "timers": [["Beef",420]] },
+        { "t": "<b>Blend the cottage cheese with the milk, Dijon, and spices until it is completely smooth.</b> This is the entire trick — blended it becomes a silky cheese sauce, unblended it stays grainy and you will not make it twice." },
+        { "t": "Drain the pasta, back into the pot <em>off the heat</em>. Stir in the blended cottage cheese, then the cheddar, until it melts into a sauce." },
+        { "t": "Fold in the beef. Three containers." }
       ],
-      "note": "<b>Two tenderloins, two jobs.</b> Sliced medallions for the plated dinners, shredded for Friday’s bowl — shredded pork holds sauce better and does not go rubbery cold."
-    },
-    {
-      "id": "stirfry",
-      "name": "Chicken & Broccoli Stir-Fry",
-      "time": "20 min",
-      "serves": 3,
-      "cal": 590,
-      "pro": 58,
-      "ing": [
-        "1.5 lbs chicken breast, sliced thin against the grain",
-        "2 broccoli crowns, florets · 1 onion, sliced",
-        "2 microwave rice pouches",
-        "Sauce: 3 tbsp soy sauce · 1 tbsp honey · 2 tsp sesame oil · grated ginger · 2 cloves garlic",
-        "Scallions to finish"
-      ],
-      "steps": [
-        { "t": "Mix the sauce in a mug first. Once the pan is hot there is no time to measure." },
-        { "t": "Screaming-hot pan, thin film of oil. Chicken in one layer — <b>do not stir for 2 min</b> or it steams instead of browning. Then toss until cooked, ~6 min total.",
-          "timers": [["Chicken",360]] },
-        { "t": "Onion and broccoli in with a splash of water. Cover, 3 min — the steam cooks the broccoli through while the pan stays hot.",
-          "timers": [["Broccoli",180]] },
-        { "t": "Sauce in. Let it bubble and tighten around everything, about 1 min.",
-          "timers": [["Sauce",60]] },
-        { "t": "Microwave both rice pouches." },
-        { "t": "Three containers: rice base, stir-fry on top. Scallions when you eat, not now." }
-      ],
-      "note": "<b>Slice the chicken while it is half-frozen.</b> Twenty minutes in the freezer and you can cut it thin enough that it cooks in six minutes instead of twelve."
-    },
-    {
-      "id": "turkeybowl",
-      "name": "Ground Turkey Burrito Bowls",
-      "time": "20 min",
-      "serves": 3,
-      "cal": 580,
-      "pro": 53,
-      "ing": [
-        "1.25 lbs ground turkey 93/7",
-        "1 onion + 1 bell pepper, diced",
-        "1 packet taco seasoning",
-        "2 microwave rice pouches",
-        "Cheese, salsa, Greek yogurt, lime"
-      ],
-      "steps": [
-        { "t": "Medium-high, splash of oil. Onion and pepper, 4 min.",
-          "timers": [["Veg 4m",240]] },
-        { "t": "Add turkey. Break it up, cook until no pink, ~7 min.",
-          "timers": [["Turkey 7m",420]] },
-        { "t": "Taco seasoning + 1/3 cup water. Simmer 3 min until it thickens.",
-          "timers": [["Simmer 3m",180]] },
-        { "t": "Squeeze in half a lime and stir. Off the heat." },
-        { "t": "Microwave both rice pouches." },
-        { "t": "Three containers: rice base, turkey on top. Keep the yogurt <em>out</em>." }
-      ],
-      "extra": {
-        "label": "Add when you eat",
-        "items": [
-          "1 oz cheese · 2 tbsp salsa",
-          "2 tbsp Greek yogurt — your sour cream, same texture, 3g protein instead of 0",
-          "Squeeze of lime"
-        ]
-      }
-    },
-    {
-      "id": "carnitas",
-      "name": "Crispy Pork Carnitas Bowl",
-      "time": "8 min",
-      "serves": 1,
-      "cal": 560,
-      "pro": 50,
-      "ing": [
-        "~6 oz shredded pork from Monday",
-        "1 microwave rice pouch",
-        "1 oz cheese · 2 tbsp salsa · 2 tbsp Greek yogurt · lime"
-      ],
-      "steps": [
-        { "t": "Hot dry skillet, pork spread in one layer. <b>Leave it alone for 3 minutes.</b> The shredded edges crisp into actual carnitas — this is the whole reason to shred it Monday rather than slice it.",
-          "timers": [["Crisp",180]] },
-        { "t": "Toss once, another minute, then off the heat. Squeeze half a lime over it in the pan.",
-          "timers": [["Second side",60]] },
-        { "t": "Rice pouch in the microwave while the pork crisps." },
-        { "t": "Rice down, pork on top, then cheese, salsa, and yogurt." }
-      ],
-      "note": "<b>Reheated pork is usually the sad part of a meal plan.</b> Crisping it in a dry pan instead of microwaving it is the difference — browned edges instead of steamed leftovers, for about ninety seconds of extra effort."
+      "note": "<b>Cottage cheese is doing the work of a butter-and-flour roux here.</b> Same creamy sauce, but the base carries 12g of protein per serving instead of none — which is how mac and cheese ends up at 59g a portion."
     }
   ]
 }
