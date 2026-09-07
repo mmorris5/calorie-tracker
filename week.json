@@ -6,7 +6,7 @@
     {
       "section": "Protein",
       "items": [
-        {"name":"Goodles mac & cheese","qty":"1 box"},
+        {"name":"Goodles mac & cheese","qty":"2 boxes (1 per meal)"},
         {"name":"Chicken sausage","qty":"1 pack (need 4 links)"},
         {"name":"Ground turkey, 93/7","qty":"1 lb"},
         {"name":"Frozen turkey meatballs","qty":"1 bag"}
@@ -41,7 +41,7 @@
 
   "quickAdds": [
     {"name":"Morning latte","cal":135,"pro":13},
-    {"name":"Goodles + sausage","cal":760,"pro":49},
+    {"name":"Goodles + sausage","cal":940,"pro":59},
     {"name":"Turkey taco bowl","cal":685,"pro":60},
     {"name":"Meatballs + marinara","cal":690,"pro":43},
     {"name":"Cottage cheese, 1c","cal":180,"pro":24},
@@ -55,22 +55,22 @@
       "id": "goodlesausage",
       "name": "Goodles + Chicken Sausage",
       "time": "12 min, one pot",
-      "serves": 2,
-      "cal": 760,
-      "pro": 49,
+      "serves": 1,
+      "cal": 940,
+      "pro": 59,
       "ing": [
-        "1 box Goodles <em>(split across both nights — half a box each)</em>",
-        "4 chicken sausage links, sliced into coins",
+        "1 full box Goodles <em>(a box is one meal — buy two)</em>",
+        "2 chicken sausage links, sliced into coins",
         "Milk and butter as the box calls for"
       ],
       "steps": [
-        { "t": "Sausage coins into a dry skillet over medium-high. <b>They are already cooked</b> — you are only browning the cut faces, about 4 minutes total, one flip.",
+        { "t": "Sausage coins into a dry skillet over medium-high. <b>They are already cooked</b> — you are only browning the cut faces, about 4 minutes, one flip.",
           "timers": [["Brown sausage",240]] },
-        { "t": "Make the Goodles exactly per the box while the sausage browns.",
+        { "t": "Make the whole box per its directions while the sausage browns.",
           "timers": [["Pasta",420]] },
-        { "t": "Tip the sausage and any browned bits into the finished mac and stir once." }
+        { "t": "Tip the sausage and any browned bits into the mac and stir once." }
       ],
-      "note": "<b>Brown the sausage, do not just heat it.</b> The cut faces going dark is where all the flavor comes from, and it costs four minutes in a pan you were not otherwise using. Half a box plus two links is one dinner; the box covers both nights."
+      "note": "<b>Butter is the dial on this one.</b> The box plus two links lands near 940 calories, and the butter the box asks for is about 100 of them. Cutting it to a teaspoon, or using only milk, brings the meal closer to 850 without touching the protein."
     },
     {
       "id": "turkeytaco",
