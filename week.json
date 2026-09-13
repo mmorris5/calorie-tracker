@@ -1,49 +1,58 @@
 {
-  "weekId": "2026-09-07",
-  "label": "Mon–Wed · Sep 7",
+  "weekId": "2026-09-14",
+  "label": "Mon–Fri · Sep 14",
 
   "groceries": [
     {
       "section": "Protein",
       "items": [
-        {"name":"Goodles mac & cheese","qty":"2 boxes (1 per meal)"},
-        {"name":"Chicken sausage","qty":"1 pack (need 4 links)"},
-        {"name":"Ground turkey, 93/7","qty":"1 lb"},
-        {"name":"Frozen turkey meatballs","qty":"1 bag"}
+        {"name":"Goodles mac & cheese","qty":"3 boxes (1 per meal)"},
+        {"name":"Chicken breasts","qty":"1.5 lbs"},
+        {"name":"Deli turkey breast, sliced","qty":"1 package (need 5 oz)"},
+        {"name":"Turkey pepperoni","qty":"1 package (need 2 oz)"}
       ]
     },
     {
       "section": "Produce",
       "items": [
-        {"name":"Bell pepper","qty":"1"},
-        {"name":"Yellow onion","qty":"1"},
-        {"name":"Lime","qty":"1"}
+        {"name":"Bell peppers","qty":"3, mixed colors"},
+        {"name":"Red onion","qty":"1"},
+        {"name":"Lime","qty":"1"},
+        {"name":"Shredded lettuce","qty":"small bag"},
+        {"name":"Tomato","qty":"1"},
+        {"name":"Frozen broccoli florets","qty":"1 bag — optional Goodles mix-in"}
       ]
     },
     {
       "section": "Dairy",
       "items": [
         {"name":"Shredded Mexican-blend cheese","qty":"8 oz"},
+        {"name":"Shredded part-skim mozzarella","qty":"8 oz"},
         {"name":"Nonfat Greek yogurt","qty":"if low"},
-        {"name":"Milk + butter","qty":"for the Goodles box, if low"}
+        {"name":"Cottage cheese","qty":"if low — optional Goodles mix-in"}
       ]
     },
     {
       "section": "Pantry",
       "items": [
         {"name":"Microwave rice pouches","qty":"2"},
-        {"name":"Marinara sauce","qty":"1 jar"},
+        {"name":"Fajita seasoning","qty":"1 packet"},
         {"name":"Salsa","qty":"1 jar"},
-        {"name":"Taco seasoning","qty":"1 packet"}
+        {"name":"Mission Carb Balance tortillas","qty":"burrito size, 1 pack"},
+        {"name":"Pizza sauce","qty":"1 small jar"},
+        {"name":"Mustard","qty":"if low"},
+        {"name":"Olive oil","qty":"if low"}
       ]
     }
   ],
 
   "quickAdds": [
     {"name":"Morning latte","cal":135,"pro":13},
-    {"name":"Goodles + sausage","cal":940,"pro":59},
-    {"name":"Turkey taco bowl","cal":685,"pro":60},
-    {"name":"Meatballs + marinara","cal":690,"pro":43},
+    {"name":"Goodles mac & cheese","cal":675,"pro":38},
+    {"name":"Goodles + cottage cheese","cal":765,"pro":50},
+    {"name":"Chicken fajita bowl","cal":685,"pro":64},
+    {"name":"Turkey pepperoni pizzas","cal":560,"pro":53},
+    {"name":"Turkey & cheese wrap","cal":385,"pro":43},
     {"name":"Cottage cheese, 1c","cal":180,"pro":24},
     {"name":"Greek yogurt + berries","cal":180,"pro":20},
     {"name":"Whey shake in water","cal":130,"pro":25},
@@ -52,70 +61,94 @@
 
   "recipes": [
     {
-      "id": "goodlesausage",
-      "name": "Goodles + Chicken Sausage",
-      "time": "12 min, one pot",
+      "id": "goodles",
+      "name": "Goodles Mac & Cheese",
+      "time": "10 min, one pot",
       "serves": 1,
-      "cal": 940,
-      "pro": 59,
+      "cal": 675,
+      "pro": 38,
       "ing": [
-        "1 full box Goodles <em>(a box is one meal — buy two)</em>",
-        "2 chicken sausage links, sliced into coins",
-        "Milk and butter as the box calls for"
+        "1 box Goodles <em>(one box is one meal — you have three this week)</em>",
+        "Whatever the box directions call for"
       ],
       "steps": [
-        { "t": "Sausage coins into a dry skillet over medium-high. <b>They are already cooked</b> — you are only browning the cut faces, about 4 minutes, one flip.",
-          "timers": [["Brown sausage",240]] },
-        { "t": "Make the whole box per its directions while the sausage browns.",
-          "timers": [["Pasta",420]] },
-        { "t": "Tip the sausage and any browned bits into the mac and stir once." }
+        { "t": "Make the whole box per its directions." },
+        { "t": "<b>Optional, for more food:</b> microwave a cup of frozen broccoli, covered, while the pasta boils, then fold it in.",
+          "timers": [["Broccoli",180]] },
+        { "t": "<b>Optional, for more protein:</b> off the heat, stir in ½ cup cottage cheese. Small-curd melts most of the way into the sauce — it stays a little textured rather than perfectly smooth." }
       ],
-      "note": "<b>Butter is the dial on this one.</b> The box plus two links lands near 940 calories, and the butter the box asks for is about 100 of them. Cutting it to a teaspoon, or using only milk, brings the meal closer to 850 without touching the protein."
+      "extra": {
+        "label": "Optional mix-ins",
+        "items": [
+          "½ cup cottage cheese — +90 cal, +12g protein",
+          "1 cup frozen broccoli — +30 cal, a noticeably bigger bowl"
+        ]
+      },
+      "note": "<b>The box already carries 38g of protein on its own</b>, which is why it does not strictly need a mix-in. Dropping the two sausage links takes about 280 calories off the meal you were eating last week."
     },
     {
-      "id": "turkeytaco",
-      "name": "Turkey Taco Bowl",
-      "time": "15 min, one pan",
-      "serves": 1,
+      "id": "fajitabowl",
+      "name": "Sheet-Pan Chicken Fajita Bowls",
+      "time": "30 min, 10 of work",
+      "serves": 3,
       "cal": 685,
-      "pro": 60,
+      "pro": 64,
       "ing": [
-        "7 oz ground turkey 93/7",
-        "Half a bell pepper + half an onion, diced",
-        "1 packet taco seasoning · 1 microwave rice pouch",
-        "Salsa, shredded cheese, Greek yogurt, lime"
+        "1.5 lbs chicken breast, cut into thin strips",
+        "3 bell peppers in different colors + 1 red onion, cut into strips",
+        "2 tbsp olive oil · 1 packet fajita seasoning · 1 lime",
+        "1½ rice pouches (1 cup cooked rice per bowl)",
+        "Salsa, a little shredded cheese, Greek yogurt"
       ],
       "steps": [
-        { "t": "Medium-high, splash of oil. Pepper and onion, 4 min.",
-          "timers": [["Veg",240]] },
-        { "t": "Turkey in. Break it up, cook until no pink, ~7 min.",
-          "timers": [["Turkey",420]] },
-        { "t": "Taco seasoning plus a splash of water. Simmer 2 min until it clings.",
-          "timers": [["Simmer",120]] },
-        { "t": "Rice pouch in the microwave. Build the bowl: rice, turkey, then salsa, cheese, yogurt, and a squeeze of lime." }
+        { "t": "Oven to 425°F. Foil on a sheet pan so there are no dishes." },
+        { "t": "Chicken, peppers, and onion onto the pan with the oil and the whole seasoning packet. Toss with your hands, then <b>spread it out in a single layer</b> — use a second pan if it is crowded." },
+        { "t": "Roast 20 min, until the pepper edges char and the thickest chicken strip is no longer pink inside.",
+          "timers": [["Roast",1200]] },
+        { "t": "Squeeze the lime over the whole pan and split it into three containers." },
+        { "t": "Microwave the rice and add 1 cup to each container.",
+          "timers": [["Rice",90]] },
+        { "t": "When you eat: 2 tbsp salsa, a small pinch of cheese, and a spoon of Greek yogurt." }
       ],
-      "note": "<b>The yogurt is doing sour cream’s job.</b> Same texture, a few grams of protein instead of none."
+      "note": "<b>Hot oven, one layer, three colors.</b> Crowded vegetables steam instead of charring, and those charred edges are exactly the flavor last month’s stir-fry was missing. Cooked Monday, it keeps well through Wednesday."
     },
     {
-      "id": "meatballs",
-      "name": "Meatballs & Marinara",
+      "id": "pizzas",
+      "name": "Turkey Pepperoni Tortilla Pizzas",
       "time": "10 min",
       "serves": 1,
-      "cal": 690,
-      "pro": 43,
+      "cal": 560,
+      "pro": 53,
       "ing": [
-        "6 frozen turkey meatballs <em>(8 if you want it closer to 55g)</em>",
-        "Half a jar of marinara · 1 microwave rice pouch",
-        "1 oz shredded cheese"
+        "2 burrito-size Carb Balance tortillas",
+        "¼ cup pizza sauce · 2 oz shredded mozzarella · 2 oz turkey pepperoni"
       ],
       "steps": [
-        { "t": "Meatballs and marinara into a saucepan from frozen, lid on, medium heat. 8 min, stirring once.",
-          "timers": [["Simmer",480]] },
-        { "t": "Rice pouch in the microwave near the end.",
-          "timers": [["Rice",90]] },
-        { "t": "Rice down, meatballs and sauce over, cheese on top to melt in the heat." }
+        { "t": "Oven to 425°F (or air fryer to 400°F). Tortillas in bare for 3 minutes first — <b>crisping them before the sauce goes on</b> is what keeps them from going soggy.",
+          "timers": [["Crisp tortillas",180]] },
+        { "t": "Sauce, mozzarella, and pepperoni on each." },
+        { "t": "Back in until the cheese bubbles, 5–6 min. Cut into wedges.",
+          "timers": [["Bake",330]] }
       ],
-      "note": "<b>The laziest meal here by some distance.</b> Two things from the freezer and pantry into one pan, no knife, no board. Meatball brands vary a lot on protein — check the bag and bump the count if yours runs low."
+      "note": "<b>Two pizzas is one dinner.</b> A thin tortilla base keeps both under 600 calories together, with more protein than a Goodles box."
+    },
+    {
+      "id": "wrap",
+      "name": "Turkey & Cheese Wrap",
+      "time": "3 min, no cooking",
+      "serves": 1,
+      "cal": 385,
+      "pro": 43,
+      "ing": [
+        "1 burrito-size Carb Balance tortilla",
+        "5 oz deli turkey · 1 oz shredded cheese",
+        "Shredded lettuce, sliced tomato, mustard"
+      ],
+      "steps": [
+        { "t": "Microwave the tortilla for 10 seconds so it rolls without cracking." },
+        { "t": "Turkey, cheese, lettuce, tomato, and a line of mustard down the middle. Fold the sides in, then roll tight." }
+      ],
+      "note": "<b>The lightest meal of the week.</b> It pairs well with Greek yogurt and berries on a day you want the calories to go further."
     }
   ]
 }
