@@ -462,6 +462,10 @@ const AI_SCHEMA = {
 function aiKey() {
   try { return localStorage.getItem(AI_KEY_STORE) || ''; } catch (e) { return ''; }
 }
+function aiKeyHint() {
+  const k = aiKey();
+  return k.length > 8 ? '…' + k.slice(-4) : 'saved';
+}
 function setAiKey(v) {
   try {
     if (v) localStorage.setItem(AI_KEY_STORE, v);
@@ -500,7 +504,16 @@ async function estimateMeal(text) {
   if (!res.ok) {
     let detail = '';
     try { detail = (await res.json()).error.message; } catch (e) {}
-    if (res.status === 401) throw new Error('Key rejected. Check it in the key field below.');
+    if (res.status === 401) {
+      /* Anthropic says why — "invalid x-api-key", a revoked key, a disabled
+         workspace. Passing it through is the difference between a dead end
+         and a fixable problem. */
+      const err = new Error('Key rejected' +
+        (detail ? ' — ' + detail.replace(/\.\s*$/, '') : '') +
+        '. Paste a current key from console.anthropic.com below.');
+      err.authFailed = true;
+      throw err;
+    }
     if (res.status === 429) throw new Error('Rate limited. Wait a moment and try again.');
     if (res.status >= 500) throw new Error('Anthropic is having trouble. Try again shortly.');
     throw new Error(detail || ('Request failed (' + res.status + ')'));
@@ -811,6 +824,7 @@ let aiText = '';
 let aiResult = null;
 let aiError = '';
 let aiBusy = false;
+let aiKeyEdit = false;   // key field is open — either no key yet, or replacing a bad one
 
 function dayTotals(k) {
   const items = DB.log[k] || [];
@@ -888,14 +902,7 @@ function renderToday() {
         (aiBusy ? '<span class="spin"></span> Estimating…' : 'Estimate') + '</button>' +
       (aiError ? '<div class="card"><div class="err">' + esc(aiError) + '</div></div>' : '') +
       (aiResult ? aiCard() : '') +
-      (aiKey() ? '' :
-        '<div class="card"><div class="pad">' +
-          '<div class="muted" style="margin-bottom:9px">Needs an Anthropic API key. It is saved ' +
-          'only on this phone, is never included in Export data, and never goes in the repo.</div>' +
-          '<input type="password" id="aikey" placeholder="sk-ant-..." autocomplete="off" ' +
-          'autocapitalize="off" spellcheck="false">' +
-          '<button class="btn" id="aikeysave" type="button" style="margin-top:9px">Save key</button>' +
-        '</div></div>') +
+      aiKeyCard() +
     '</div>' +
 
     '<div class="lbl" style="margin:22px 0 9px">Logged · ' + items.length + '</div>' +
@@ -938,6 +945,33 @@ function renderToday() {
 }
 
 /* ---- AI panel rendering + wiring ---- */
+
+/* The key card is always on screen. When a key is stored it collapses to a
+   line plus "Replace key" — without that, a key the API rejects is
+   unfixable from the phone, since the field only ever showed when the key
+   was missing. */
+function aiKeyCard() {
+  const has = !!aiKey();
+  if (has && !aiKeyEdit) {
+    return '<div class="card"><div class="pad">' +
+      '<div class="muted">API key saved on this phone · ' + esc(aiKeyHint()) + '</div>' +
+      '<button class="btn ghost" id="aikeyedit" type="button" ' +
+      'style="margin-top:4px">Replace key</button>' +
+      '</div></div>';
+  }
+  return '<div class="card"><div class="pad">' +
+    '<div class="muted" style="margin-bottom:9px">' +
+      (has ? 'Paste a new key to replace the saved one.'
+           : 'Needs an Anthropic API key.') +
+      ' It is saved only on this phone, is never included in Export data, ' +
+      'and never goes in the repo.</div>' +
+    '<input type="password" id="aikey" placeholder="sk-ant-..." autocomplete="off" ' +
+    'autocapitalize="off" spellcheck="false">' +
+    '<button class="btn" id="aikeysave" type="button" style="margin-top:9px">Save key</button>' +
+    (has ? '<button class="btn ghost" id="aikeycancel" type="button">Cancel</button>' : '') +
+    '</div></div>';
+}
+
 function aiCard() {
   const t = aiResult.items.reduce(
     (a, x) => ({ c: a.c + x.calories, p: a.p + x.protein }), { c: 0, p: 0 });
@@ -966,7 +1000,17 @@ function wireAI() {
   if (keySave) keySave.addEventListener('click', () => {
     const v = $('#aikey').value.trim();
     if (!v) { $('#aikey').focus(); return; }
-    setAiKey(v); renderToday();
+    setAiKey(v); aiKeyEdit = false; aiError = ''; renderToday();
+  });
+
+  const keyEdit = $('#aikeyedit');
+  if (keyEdit) keyEdit.addEventListener('click', () => {
+    aiKeyEdit = true; renderToday(); if ($('#aikey')) $('#aikey').focus();
+  });
+
+  const keyCancel = $('#aikeycancel');
+  if (keyCancel) keyCancel.addEventListener('click', () => {
+    aiKeyEdit = false; renderToday();
   });
 
   const go = $('#aigo');
@@ -981,6 +1025,7 @@ function wireAI() {
     } catch (e) {
       aiError = (e && e.message) ? e.message :
         'Could not reach Anthropic. Check your connection.';
+      if (e && e.authFailed) aiKeyEdit = true;
     }
     aiBusy = false; buzz(10); renderToday();
   });
